@@ -22,9 +22,12 @@
 pb = 1/2 * (1 + 1/sqrt(2)); % Bob's winning probability
 
 %% define the P&M network scenario
-nX = 2; nA = 2;
-nY = 2; nB = 2;
-nZ = 0; nC = 0;
+nX = 2; % number of inputs for Alice
+nA = 2; % number of outputs for Alice
+nY = 2; % number of inputs for Bob
+nB = 2; % number of outputs for Bob
+nZ = 0; % number of inputs for Charlie
+nC = 0; % number of outputs for Charlie
 
 %% the level of the NPA hierarchy
 Q = 1;
@@ -100,7 +103,7 @@ cvx_begin sdp
     variable v(length(ref),4,4);
     expression pA; % Alice's winning probability
     expression pB; % Bob's winning probability
-    expression g(4,4,L,L); % moment matrix    
+    expression g(4,4,L,L); % moment matrices   
 
     % projectors
     expression id;
@@ -143,7 +146,8 @@ cvx_begin sdp
             end
         end
     end
-
+    
+    % the big Gram matrix
     gamma = [ g(:,:,1,1), g(:,:,1,2), g(:,:,1,3), g(:,:,1,4);
               g(:,:,2,1), g(:,:,2,2), g(:,:,2,3), g(:,:,2,4);
               g(:,:,3,1), g(:,:,3,2), g(:,:,3,3), g(:,:,3,4);
