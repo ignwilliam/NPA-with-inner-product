@@ -14,7 +14,7 @@
 % a and b are their outputs
 
 % IMPORTANT:    
-% here, we use the CVX for disciplined convex programming with MOSEK
+% here, we use CVX for disciplined convex programming with MOSEK
 % solver refer to http://cvxr.com/cvx/doc/mosek.html for an instruction on 
 % how to use MOSEK with CVX
 
