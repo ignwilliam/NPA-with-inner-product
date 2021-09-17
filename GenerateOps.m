@@ -68,12 +68,13 @@ S = []; % initialise the set
 
 %% the identity operator
 S(1).status = 'I'; % status: '0' is zero, '1' is non-empty, 'I' is identity
-S(1).as = ''; % Alice's setting
-S(1).ao = ''; % Alice's output
-S(1).bs = ''; % Bob's setting
-S(1).bo = ''; % Bob's output
-S(1).cs = ''; % Charlie's setting
-S(1).co = ''; % Charlie's output
+S(1).as = []; % Alice's setting
+S(1).ao = []; % Alice's output
+S(1).bs = []; % Bob's setting
+S(1).bo = []; % Bob's output
+S(1).cs = []; % Charlie's setting
+S(1).co = []; % Charlie's output
+S(1).cdagger = []; % Charlie's dagger
 
 P = []; % Q1 operators
 i = 1;
@@ -82,12 +83,13 @@ i = 1;
 for x = 1:nX
     for a = 1:nA-1
         P(i).status = '1'; % status: '0' is zero, '1' is non-empty, 'I' is identity
-        P(i).as = int2str(x-1); % Alice's setting
-        P(i).ao = int2str(a-1); % Alice's output
-        P(i).bs = ''; % Bob's setting
-        P(i).bo = ''; % Bob's output
-        P(i).cs = ''; % Charlie's setting
-        P(i).co = ''; % Charlie's output
+        P(i).as = x-1; % Alice's setting
+        P(i).ao = a-1; % Alice's output
+        P(i).bs = []; % Bob's setting
+        P(i).bo = []; % Bob's output
+        P(i).cs = []; % Charlie's setting
+        P(i).co = []; % Charlie's output
+        P(i).cdagger = [];
         i = i+1;
     end
 end
@@ -96,27 +98,31 @@ end
 for y = 1:nY
     for b = 1:nB-1
         P(i).status = '1'; % status: '0' is zero, '1' is non-empty, 'I' is identity
-        P(i).as = ''; % Alice's setting
-        P(i).ao = ''; % Alice's output
-        P(i).bs = int2str(y-1); % Bob's setting
-        P(i).bo = int2str(b-1); % Bob's output
-        P(i).cs = ''; % Charlie's setting
-        P(i).co = ''; % Charlie's output
+        P(i).as = []; % Alice's setting
+        P(i).ao = []; % Alice's output
+        P(i).bs = y-1; % Bob's setting
+        P(i).bo = b-1; % Bob's output
+        P(i).cs = []; % Charlie's setting
+        P(i).co = []; % Charlie's output
+        P(i).cdagger = [];
         i = i+1;
     end
 end
 
 %% Charlie's operators
 for z = 1:nZ
-    for c = 1:nC-1
-        P(i).status = '1'; % status: '0' is zero, '1' is non-empty, 'I' is identity
-        P(i).as = ''; % Alice's setting
-        P(i).ao = ''; % Alice's output
-        P(i).bs = ''; % Bob's setting
-        P(i).bo = ''; % Bob's output
-        P(i).cs = int2str(z-1); % Charlie's setting
-        P(i).co = int2str(c-1); % Charlie's output
-        i = i+1;
+    for c = 1:nC
+        for dagger = 0:1
+            P(i).status = '1'; % status: '0' is zero, '1' is non-empty, 'I' is identity
+            P(i).as = []; % Alice's setting
+            P(i).ao = []; % Alice's output
+            P(i).bs = []; % Bob's setting
+            P(i).bo = []; % Bob's output
+            P(i).cs = z-1; % Charlie's setting
+            P(i).co = c-1; % Charlie's output
+            P(i).cdagger = dagger;
+            i = i+1;
+        end
     end
 end
 

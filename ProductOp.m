@@ -5,12 +5,13 @@ function [ Z ] = ProductOp( X,Y )
 
 % define zero operator
 zero.status = '0';
-zero.as = '';
-zero.ao = '';
-zero.bs = '';
-zero.bo = '';
-zero.cs = '';
-zero.co = '';
+zero.as = [];
+zero.ao = [];
+zero.bs = [];
+zero.bo = [];
+zero.cs = [];
+zero.co = [];
+zero.cdagger = [];
 
 if strcmp(X.status,'0')||strcmp(Y.status,'0') % either X or Y is the zero operator
     Z = zero;
@@ -23,12 +24,13 @@ elseif strcmp(Y.status,'I') % if Y is the identity operator
     return;
 else
     Z.status = '1';
-    Z.as = strcat(X.as,Y.as);
-    Z.ao = strcat(X.ao,Y.ao);
-    Z.bs = strcat(X.bs,Y.bs);
-    Z.bo = strcat(X.bo,Y.bo);
-    Z.cs = strcat(X.cs,Y.cs);
-    Z.co = strcat(X.co,Y.co);
+    Z.as = [X.as,Y.as];
+    Z.ao = [X.ao,Y.ao];
+    Z.bs = [X.bs,Y.bs];
+    Z.bo = [X.bo,Y.bo];
+    Z.cs = [X.cs,Y.cs];
+    Z.co = [X.co,Y.co];
+    Z.cdagger = [X.cdagger,Y.cdagger];
     Z = CheckOrtho(Z); % check for orthogonality
     return;
 end
