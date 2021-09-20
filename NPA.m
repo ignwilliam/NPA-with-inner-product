@@ -42,10 +42,48 @@ classdef NPA
 				sdp.Gamma = sdpvar(num_mono*num_states, num_mono*num_states, 'full', 'complex');
 			else
 				sdp.variables = sdpvar(num_var,num_states,num_states, 'full');
-				sdp.Gamma = sdpvar(num_mono*num_states, num_mono*num_states, 'full');
+				sdp.Gamma = sdpvar(num_mono*num_states, num_mono*num_states);
 			end
-			
-			sdp.npa_constraints = MomentMatrixSDP(sdp.variables, sdp.Gamma, [], sdp.gram_input, sdp.index_matrix);
+
+			% generate NPA constraints
+			sdp.npa_constraints = MomentMatrixConstraints(sdp);
+		end
+
+		%% impose NPA and inner-product constraints
+		function constraints = MomentMatrixConstraints(sdp)
+			% initialise constraints
+			constraints = [];
+
+			num_monomials = length(sdp.monomials);
+			num_states = length(sdp.gram_input);
+
+			for i = 1:num_states
+				for j = 1:num_states
+					for k = 1:num_monomials
+						for l = 1:num_monomials
+							row = (i-1)*num_monomials + k;
+							col = (j-1)*num_monomials + l;
+							
+							switch sdp.index_matrix(k,l)
+								case 0
+									constraints = [constraints, sdp.Gamma(row,col) == 0];
+								case 1
+									constraints = [constraints, sdp.Gamma(row,col) == sdp.gram_input(i,j)];
+								otherwise
+									constraints = [constraints, ...
+											       sdp.Gamma(row,col) == sdp.variables(sdp.index_matrix(k,l),i,j)];
+							end
+						end
+					end
+				end
+			end
+
+			if sdp.isComplex
+				constraints = [constraints, sdp.Gamma == sdp.Gamma'];
+				constraints = [constraints, sdp.Gamma + sdp.Gamma' >= 0];
+			else
+				constraints = [constraints, sdp.Gamma >= 0];
+			end
 		end
 
 		function vars = Operator2Variable(sdp, ops, bra, ket)
