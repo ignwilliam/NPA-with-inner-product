@@ -8,9 +8,7 @@
 %                       1, -1i;
 %                       1, 1i];
 states = [1, 0;
-          0, 1;
-          1/sqrt(2), 1/sqrt(2);
-          1/sqrt(2), -1/sqrt(2)];
+          0, 1];
 gram_input = GramMatrixQudit(states);
 
 %% generate NPA relaxation
@@ -32,14 +30,16 @@ R_data = [];
 R_exact = [];
 
 % collecting data
+tic
 for err = 0:0.005:0.11
-	H = BFF_bound(npa, err, num_nodes); % calculate von Neumann entropy
+	H = BFF_bound_BB84(npa, err, num_nodes); % calculate von Neumann entropy
 	R = H - h2(err);
-	r = 1 - 2*h2(err);
 	
 	QBER_data = [QBER_data, err];	
 	R_data = [R_data, R];
-	R_exact = [R_exact, r];
 end
+toc
 
-plot(QBER_data,R_data, QBER_data, R_exact,'o')
+QBER = linspace(0,0.11,1E4);
+R_exact = 1 - 2.*h2(QBER);
+plot(QBER_data,R_data, 'o', QBER, R_exact)

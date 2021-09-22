@@ -1,4 +1,4 @@
-function H = BFF_bound(npa, QBER, num_nodes)
+function H = BFF_bound_BB84(npa, QBER, num_nodes)
 	% compute lower bound on von Neumann entropy for phase-encoded qubit BB84
 	% via BFF method and NPA with inner-product
 	% inputs:
@@ -22,12 +22,20 @@ function H = BFF_bound(npa, QBER, num_nodes)
 		end
 	end
 
-	% QBER constraints:
+	%% QBER constraints:
+	% % for (X,Y) basis protocol
+	% ex = QBER;
+	% ey = QBER;
+	% err_X = 0.5 * ( 1-b(1,1,1) + b(1,2,2) );
+	% err_Y = 0.5 * ( 1-b(2,3,3) + b(2,4,4) );
+	% QBER_constraints = [err_X <= ex, err_Y <= ey];
+
+	% for (Z,X)-basis protocol
+	ez = QBER;
 	ex = QBER;
-	ey = QBER;
-	err_X = 0.5 * ( 1-b(1,1,1) + b(1,2,2) );
-	err_Y = 0.5 * ( 1-b(2,3,3) + b(2,4,4) );
-	QBER_constraints = [err_X <= ex, err_Y <= ey];
+	err_Z = 0.5 * ( 1 - b(1,1,1) + b(1,2,2) );
+	err_X = 0.5 * ( 1 - 2*real(b(2,1,2)) );
+	QBER_constraints = [err_Z <= ez, err_X <= ex];
 
 	% combine constraits
 	constraints = [QBER_constraints, npa.npa_constraints];
