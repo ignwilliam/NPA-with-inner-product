@@ -24,17 +24,16 @@ npa = NPA(gram_input, io_config, level, extra_monomials, isComplex);
 toc
 
 %% BFF bound
-num_nodes = 12;
+num_nodes = 8;
 
-%% compute phase-error rate
+% save data
 QBER_data = [];
 R_data = [];
 R_exact = [];
 
+% collecting data
 for err = 0:0.005:0.11
-	tic
-	H = BFF_bound(npa, err, num_nodes);
-	toc
+	H = BFF_bound(npa, err, num_nodes); % calculate von Neumann entropy
 	R = H - h2(err);
 	r = 1 - 2*h2(err);
 	
