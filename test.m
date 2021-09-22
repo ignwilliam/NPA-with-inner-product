@@ -1,4 +1,5 @@
-% test script for NPA2-BFF code
+% test script for NPA with inner-product 
+% security analysis for phase-encoded qubit BB84 via phase-error rate bound
 
 %% set observed QBER
 QBER = 0.01;
