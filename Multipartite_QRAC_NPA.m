@@ -19,7 +19,12 @@
 % how to use MOSEK with CVX
 
 %% Bob's winning probability
-pb = 1/2 * (1 + 1/sqrt(2)); % Bob's winning probability
+N = 20;
+t = linspace(0,pi/2,N);
+R = (cos(pi/8)^2 - 0.5);
+pb = 0.5 + R * sin(t);
+% pb = linspace(0.5,1/2 * (1 + 1/sqrt(2)),N); % Bob's winning probability
+pa = zeros(1,N);
 
 %% define the P&M network scenario
 nX = 2; % number of inputs for Alice
@@ -98,7 +103,8 @@ lambda = [         1,  1/sqrt(2), 1/sqrt(2),          0;
 
 
 %% solve SDP
-cvx_begin sdp
+for n = 1:N
+cvx_begin sdp quiet
     cvx_solver mosek
     variable v(length(ref),4,4);
     expression pA; % Alice's winning probability
@@ -170,5 +176,13 @@ cvx_begin sdp
         gamma >= 0;
 
         % Bob's winning probability constraint
-        pB == pb;
+        pB == pb(n);
 cvx_end
+
+pa(n) = pA;
+end
+
+x = linspace(0.5,1/2 * (1 + 1/sqrt(2)),1000);
+y = 0.5 + 0.5 * sqrt( 0.5 - (2 *x - 1).^2);
+
+plot(x,y,pb,pa,'o');
